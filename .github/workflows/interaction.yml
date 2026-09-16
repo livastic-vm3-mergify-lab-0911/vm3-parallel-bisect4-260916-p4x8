@@ -1,0 +1,21 @@
+name: interaction-guard
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  interaction-guard:
+    name: interaction-guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Fail only when A and C coexist
+        shell: bash
+        run: |
+          echo "sha=$GITHUB_SHA event=$GITHUB_EVENT_NAME"
+          printf 'files:'; ls -1 *.txt 2>/dev/null | tr '\n' ' '; echo
+          if [[ -f a.txt && -f c.txt ]]; then
+            echo 'VM3_P4X8_CROSS_SPLIT_INTERACTION_FAILURE'
+            exit 1
+          fi
+          echo 'VM3_P4X8_SPLIT_PASS'
